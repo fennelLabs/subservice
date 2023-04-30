@@ -1,3 +1,5 @@
 services:
   subservice:
     build: .
+    ports:
+      - "6060:6060"
