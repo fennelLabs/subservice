@@ -1,6 +1,5 @@
 import { ApiPromise } from "@polkadot/api";
 import { TextDecoder } from "text-encoding";
-import { NODE_URI_WS } from "./config";
 
 class Node {
   /**
@@ -16,11 +15,38 @@ class Node {
     this._api = api;
   }
 
+  async getAccountBalance(keyManager) {
+    const api = await this.api();
+    const { data: balance } = await api.query.system.account(
+      keyManager.address()
+    );
+    // Very large balances upset the toNumber() call
+    return `${balance.free}`;
+  }
+
+  async getFeeForTransferToken(keyManager, to, amount) {
+    if (!keyManager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.balances
+      .transfer(to, amount)
+      .paymentInfo(keyManager.address(), keyManager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async transferToken(keymanager, address, amount) {
+    const api = await this.api();
+    const txHash = await api.tx.balances
+      .transfer(address, parseInt(amount))
+      .signAndSend(keymanager.signer());
+    return txHash.toHex();
+  }
+
   async getFeeForSendNewSignal(keymanager, content) {
     if (!keymanager.signer()) return;
 
     const api = await this.api();
-    const info = await api.tx.signalModule
+    const info = await api.tx.signal
       .sendSignal(content)
       .paymentInfo(keymanager.address(), keymanager.signer());
     return info.partialFee.toNumber();
@@ -29,25 +55,10 @@ class Node {
   async sendNewSignal(keymanager, content) {
     try {
       const api = await this.api();
-      await api.tx.signalModule
+      const txHash = await api.tx.signal
         .sendSignal(content)
-        .signAndSend(
-          keymanager.address(),
-          { signer: keymanager.signer() },
-          (result) => {
-            console.log(`Current status is ${result.status}`);
-
-            if (result.status.isInBlock) {
-              console.log(
-                `Transaction included at blockHash ${result.status.asInBlock}`
-              );
-            } else if (result.status.isFinalized) {
-              console.log(
-                `Transaction finalized at blockHash ${result.status.asFinalized}`
-              );
-            }
-          }
-        );
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
     } catch (e) {
       throw "sendNewSignal() failed.";
     }
@@ -66,7 +77,7 @@ class Node {
 
     signedBlock.block.extrinsics.forEach(
       ({ method: { method, section } }, index) => {
-        if (method == "sendSignal" && section == "signalModule") {
+        if (method == "sendSignal" && section == "signal") {
           const events = allRecords
             .filter(
               ({ phase }) =>
@@ -87,13 +98,11 @@ class Node {
     );
 
     let new_events_list = events_list.filter((element) => {
-      return (
-        element.section == "signalModule" && element.method == "SignalSent"
-      );
+      return element.section == "signal" && element.method == "SignalSent";
     });
 
     let final_events = Array.from(
-      new Set([...this._signals.value, ...new_events_list].map(JSON.stringify))
+      new Set([...new_events_list].map(JSON.stringify))
     ).map(JSON.parse);
 
     return final_events;
@@ -125,19 +134,6 @@ class Node {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  get_metadata_request() {
-    let request = new Request(NODE_URI_WS, {
-      method: "POST",
-      body: JSON.stringify({
-        id: 1,
-        jsonrpc: "2.0",
-        method: "state_getMetadata",
-      }),
-      headers: { "Content-Type": "application/json" },
-    });
-    return request;
   }
 
   hex_to_string(metadata) {

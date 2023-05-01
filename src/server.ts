@@ -2,9 +2,9 @@ import http from "http";
 import express, { Express } from "express";
 import morgan from "morgan";
 import transaction_routes from "./routes/transaction";
-import whiteflag_routes from "./routes/whiteflag"
 import {config as configDotenv} from "dotenv";
 import {resolve} from 'path';
+import bodyParser from "body-parser";
 
 configDotenv({path: resolve(__dirname, "../.env")});
 
@@ -13,6 +13,7 @@ const router: Express = express();
 router.use(morgan("dev"));
 router.use(express.urlencoded({ extended: false }));
 router.use(express.json());
+router.use(bodyParser.json());
 
 router.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -28,7 +29,6 @@ router.use((req, res, next) => {
 });
 
 router.use("/", transaction_routes);
-router.use("/whiteflag/", whiteflag_routes);
 
 router.use((req, res, next) => {
   const error = new Error("not found");

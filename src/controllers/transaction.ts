@@ -1,8 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import KeyManager from "../lib/key";
 import Node from "../lib/node";
-import connect from "../lib/loadPolkadotApi";
-import AccountBalanceService from "../lib/AccountBalance";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+
+async function connect() {
+  const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+  const api = await ApiPromise.create({ provider: wsProvider });
+  console.log(api.genesisHash.toHex());
+  return api;
+}
+
+async function testRPC(req: Request, res: Response, next: NextFunction) {
+  const response = await fetch("http://127.0.0.1:9944", {
+    body: JSON.stringify({
+      id: 1,
+      jsonrpc: "2.0",
+      method: "system_chain",
+      params: [],
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  return res.status(200).json({
+    response: await response.json(),
+  });
+}
 
 async function createAccount(req: Request, res: Response, next: NextFunction) {
   const response = new KeyManager("Main").generateAccount();
@@ -12,22 +36,69 @@ async function createAccount(req: Request, res: Response, next: NextFunction) {
   });
 }
 
+async function getAddress(req: Request, res: Response, next: NextFunction) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.mnemonic);
+  let response = keyManager.address();
+
+  return res.status(200).json({
+    address: response,
+  });
+}
+
 async function getAccountBalance(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const { rxjs } = connect();
+  const promise = await connect();
 
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
-  const balanceService = new AccountBalanceService(rxjs, keyManager);
-  await balanceService.listenForBalanceChanges();
-  const response = balanceService.balance;
+  const node = new Node(promise);
+  const response = await node.getAccountBalance(keyManager);
 
   return res.status(200).json({
     balance: response,
+  });
+}
+
+async function getFeeForTransferToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.mnemonic);
+
+  const promise = await connect();
+  const node = new Node(promise);
+  const response = await node.getFeeForTransferToken(
+    keyManager,
+    req.body.to,
+    req.body.amount
+  );
+
+  return res.status(200).json({
+    fee: response,
+  });
+}
+
+async function transferToken(req: Request, res: Response, next: NextFunction) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.mnemonic);
+
+  const promise = await connect();
+  const node = new Node(promise);
+  let hash = await node.transferToken(
+    keyManager,
+    req.body.to,
+    req.body.amount
+  );
+
+  return res.status(200).json({
+    hash: hash,
   });
 }
 
@@ -39,7 +110,7 @@ async function getFeeForNewSignal(
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
-  const { promise } = connect();
+  const promise = await connect();
   const node = new Node(promise);
   const response = await node.getFeeForSendNewSignal(
     keyManager,
@@ -55,11 +126,13 @@ async function sendNewSignal(req: Request, res: Response, next: NextFunction) {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
-  const { promise } = connect();
+  const promise = await connect();
   const node = new Node(promise);
-  await node.sendNewSignal(keyManager, req.body.content);
+  let hash = await node.sendNewSignal(keyManager, req.body.content);
 
-  return res.status(200);
+  return res.status(200).json({
+    hash: hash,
+  });
 }
 
 async function getSignalHistory(
@@ -67,7 +140,7 @@ async function getSignalHistory(
   res: Response,
   next: NextFunction
 ) {
-  const { promise } = connect();
+  const promise = await connect();
 
   const response = await new Node(promise).listenForSignals();
 
@@ -77,8 +150,12 @@ async function getSignalHistory(
 }
 
 export default {
+  testRPC,
   createAccount,
+  getAddress,
   getAccountBalance,
+  getFeeForTransferToken,
+  transferToken,
   getFeeForNewSignal,
   sendNewSignal,
   getSignalHistory,

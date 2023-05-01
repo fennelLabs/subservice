@@ -1,0 +1,95 @@
+@hostname = localhost
+@port = 6060
+@node_hostname = localhost
+@node_port = 9944
+
+###
+# @name Test RPC
+GET /test_rpc
+Host: {{hostname}}:{{port}}
+
+###
+# @name Create Account
+GET /create_account
+Host: {{hostname}}:{{port}}
+
+###
+# @name Get Address
+GET /get_address
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle"
+}
+
+###
+# @name Get Account Balance
+POST /get_account_balance
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle"
+}
+
+###
+# @name Get Address
+POST /get_address
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle"
+}
+
+###
+# @name Get Fee For Transfer Token
+POST /get_fee_for_transfer_token
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "to": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt",
+    "amount": 100000
+}
+
+###
+# @name Get Fee For Transfer Token
+POST /transfer_token
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "to": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt",
+    "amount": 100000
+}
+
+###
+# @name Get Fee for New Signal
+POST /get_fee_for_new_signal
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "content": "Testing Message"
+}
+
+###
+# @name Send New Signal
+POST /send_new_signal
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "content": "Testing Message"
+}
+
+###
+# @name Get Signal History
+POST /get_signal_history
+Host: {{hostname}}:{{port}}
