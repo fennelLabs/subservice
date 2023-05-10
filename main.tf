@@ -7,9 +7,9 @@ module "gce-container" {
   }
 }
 
-resource "google_compute_address" "fennel-subservice-ip" {
-  name = "fennel-subservice-ip"
-}
+#resource "google_compute_address" "fennel-subservice-ip" {
+#  name = "fennel-subservice-ip"
+#}
 
 resource "google_compute_instance" "fennel-subservice" {
   name         = "fennel-subservice-instance"
