@@ -16,7 +16,7 @@ resource "google_compute_instance" "fennel-subservice" {
   machine_type = "e2-small"
   zone         = "us-east1-b"
 
-  #can_ip_forward = true
+  can_ip_forward = true
   tags = ["private-server"]
   
   boot_disk {
