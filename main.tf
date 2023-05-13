@@ -7,9 +7,17 @@ module "gce-container" {
   }
 }
 
-#resource "google_compute_address" "fennel-subservice-ip" {
-#  name = "fennel-subservice-ip"
-#}
+
+resource "google_storage_bucket_object" "startup" {
+  name   = "fennel-subservice-terraform-start.sh"
+  bucket = "whiteflag-0-admin"
+  source = "fennel-subservice-terraform-start.sh"
+  content_type = "text/plain"
+}
+
+resource "google_compute_address" "fennel-subservice-ip" {
+  name = "fennel-subservice-ip"
+}
 
 resource "google_compute_instance" "fennel-subservice" {
   name         = "fennel-subservice-instance"
@@ -28,22 +36,13 @@ resource "google_compute_instance" "fennel-subservice" {
   network_interface {
     network    = "whiteflag-sandbox-vpc"
     subnetwork = "public-subnet"
-     #access_config {
-     #nat_ip = google_compute_address.fennel-subservice-ip.address
-     #}
-  }
-
-  metadata_startup_script = <<EOF
-    #!/bin/bash
-    apt-get update
-    apt-get install -y docker.io
-    gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east1-docker.pkg.dev
-    docker pull us-east1-docker.pkg.dev/whiteflag-0/fennel-docker-registry/fennel-subservice:latest
-    docker run -dit -p 1234:1234 --name fennel-subservice us-east1-docker.pkg.dev/whiteflag-0/fennel-docker-registry/fennel-subservice:latest
-  EOF  
+    access_config {
+      nat_ip = google_compute_address.fennel-subservice-ip.address
+    }
+  } 
 
  metadata = {
-    # Required metadata key.
+    startup-script-url = "gs://whiteflag-0-admin/fennel-subservice-terraform-start.sh"
     gce-container-declaration = module.gce-container.metadata_value
     google-logging-enabled    = "true"
     google-monitoring-enabled = "true"
