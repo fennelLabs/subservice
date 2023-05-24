@@ -22,6 +22,7 @@ resource "google_compute_instance" "fennel-subservice" {
   name         = "fennel-subservice-instance"
   machine_type = "e2-small"
   zone         = "us-east1-b"
+  allow_stopping_for_update = true 
 
   can_ip_forward = true
   tags = ["private-server"]
