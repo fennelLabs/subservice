@@ -7,7 +7,6 @@ module "gce-container" {
   }
 }
 
-
 resource "google_storage_bucket_object" "startup" {
   name   = "fennel-subservice-terraform-start.sh"
   bucket = "whiteflag-0-admin"
@@ -51,4 +50,10 @@ resource "google_compute_instance" "fennel-subservice" {
   service_account {
     scopes = ["cloud-platform"]
   }
+}
+
+esource "google_storage_bucket_object" "fennel-subservice-ip" {
+  name   = "fennel-subservice-ip.sh"
+  bucket = "whiteflag-0-admin"
+  content = google_compute_address.fennel-subservice-ip.address
 }
