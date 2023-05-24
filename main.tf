@@ -34,7 +34,7 @@ resource "google_compute_instance" "fennel-subservice" {
 
   network_interface {
     network    = "whiteflag-sandbox-vpc"
-    subnetwork = "public-subnet"
+    subnetwork = "private-subnet"
     access_config {
       nat_ip = google_compute_address.fennel-subservice-ip.address
     }
@@ -52,7 +52,7 @@ resource "google_compute_instance" "fennel-subservice" {
   }
 }
 
-esource "google_storage_bucket_object" "fennel-subservice-ip" {
+resource "google_storage_bucket_object" "fennel-subservice-ip" {
   name   = "fennel-subservice-ip.sh"
   bucket = "whiteflag-0-admin"
   content = google_compute_address.fennel-subservice-ip.address
