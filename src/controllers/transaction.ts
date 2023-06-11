@@ -4,14 +4,14 @@ import Node from "../lib/node";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
 async function connect() {
-  const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+  const wsProvider = new WsProvider("ws://34.23.178.177:9944");
   const api = await ApiPromise.create({ provider: wsProvider });
   console.log(api.genesisHash.toHex());
   return api;
 }
 
 async function testRPC(req: Request, res: Response, next: NextFunction) {
-  const response = await fetch("http://127.0.0.1:9944", {
+  const response = await fetch("http://34.23.178.177:9944", {
     body: JSON.stringify({
       id: 1,
       jsonrpc: "2.0",
