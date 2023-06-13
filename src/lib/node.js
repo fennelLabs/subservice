@@ -64,6 +64,165 @@ class Node {
     }
   }
 
+  async getFeeForIssueTrust(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .issueTrust(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async issueTrust(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .issueTrust(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "issueTrust() failed.";
+    }
+  }
+
+  async getFeeForRemoveTrust(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .removeTrust(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async removeTrust(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .removeTrust(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "removeTrust() failed.";
+    }
+  }
+
+  async getFeeForRequestTrust(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .requestTrust(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async requestTrust(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .requestTrust(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "requestTrust() failed.";
+    }
+  }
+
+  async getFeeForCancelTrustRequest(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .cancelTrustRequest(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async cancelTrustRequest(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .cancelTrustRequest(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "cancelTrustRequest() failed.";
+    }
+  }
+
+  async getFeeForRevokeTrust(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .revokeTrust(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async revokeTrust(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .revokeTrust(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "revokeTrust() failed.";
+    }
+  }
+
+  async getFeeForRemoveRevokedTrust(keymanager, address) {
+    if (!keymanager.signer()) return;
+
+    const api = await this.api();
+    const info = await api.tx.trust
+      .removeRevokedTrust(address)
+      .paymentInfo(keymanager.address(), keymanager.signer());
+    return info.partialFee.toNumber();
+  }
+
+  async removeRevokedTrust(keymanager, address) {
+    try {
+      const api = await this.api();
+      const txHash = await api.tx.trust
+        .removeRevokedTrust(address)
+        .signAndSend(keymanager.signer());
+      return txHash.toHex();
+    } catch (e) {
+      throw "removeRevokedTrust() failed.";
+    }
+  }
+
+  async checkTrustExists(address1, address2) {
+    const api = await this.api();
+    const data = await api.query.trust.trustIssuance(address1, address2);
+    return data.toNumber();
+  }
+
+  async getTrustHistory() {
+    const api = await this.api();
+    let trustHistory = await api.query.trust.trustIssuance.entries();
+    let result = [];
+    trustHistory.forEach(
+      ([
+        {
+          args: [address, address2],
+        },
+        value
+      ]) => {
+        result.push({
+          address: address,
+          address2: address2,
+          value: value.toNumber(),
+        });
+      }
+    );
+    return result;
+  }
+
   async listenForSignals() {
     var events_list = [];
 
