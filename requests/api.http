@@ -93,3 +93,98 @@ Content-Type: application/json
 # @name Get Signal History
 POST /get_signal_history
 Host: {{hostname}}:{{port}}
+
+###
+# @name Get Fee For Issue Trust
+POST: /get_fee_for_issue_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Issue Trust
+POST: /issue_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Get Fee For Remove Trust
+POST: /get_fee_for_remove_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Remove Trust
+POST: /remove_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Get Fee for Request Trust
+POST: /get_fee_for_request_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Request Trust
+POST: /request_trust
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Get Fee for Cancel Trust Request
+POST: /get_fee_for_cancel_trust_request
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Cancel Trust Request
+POST: /cancel_trust_request
+Host: {{hostname}}:{{port}}
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle",
+    "address": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Check Trust Exists
+POST: /check_trust_exists
+Host: {{hostname}}:{{port}}
+
+{
+    "address1": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt",
+    "address2": "5CwBjJ48HW7c36dT7pAf9TkGQjj88jxw624xHaL6wtXJTWCt"
+}
+
+###
+# @name Get Trust History
+POST: /get_trust_history
+Host: {{hostname}}:{{port}}
