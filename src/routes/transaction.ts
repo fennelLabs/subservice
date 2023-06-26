@@ -2,6 +2,7 @@ import express from "express";
 import controller from "../controllers/transaction";
 const router = express.Router();
 
+router.get("/healthcheck", controller.healthcheck);
 router.get("/test_rpc", controller.testRPC);
 router.get("/create_account", controller.createAccount);
 router.post("/get_fee_for_transfer_token", controller.getFeeForTransferToken);

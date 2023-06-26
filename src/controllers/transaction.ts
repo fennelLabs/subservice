@@ -10,6 +10,10 @@ async function connect() {
   return api;
 }
 
+async function healthcheck(req: Request, res: Response, next: NextFunction) {
+    return res.status(200);
+}
+
 async function testRPC(req: Request, res: Response, next: NextFunction) {
   const response = await fetch("http://34.23.178.177:9944", {
     body: JSON.stringify({
@@ -395,6 +399,7 @@ async function getTrustHistory(
 }
 
 export default {
+  healthcheck,
   testRPC,
   createAccount,
   getAddress,
