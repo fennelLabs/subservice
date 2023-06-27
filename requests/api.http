@@ -13,7 +13,7 @@ Host: {{hostname}}:{{port}}
 
 ###
 # @name Get Address
-GET /get_address
+POST /get_address
 Host: {{hostname}}:{{port}}
 Content-Type: application/json
 
@@ -24,16 +24,6 @@ Content-Type: application/json
 ###
 # @name Get Account Balance
 POST /get_account_balance
-Host: {{hostname}}:{{port}}
-Content-Type: application/json
-
-{
-    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle"
-}
-
-###
-# @name Get Address
-POST /get_address
 Host: {{hostname}}:{{port}}
 Content-Type: application/json
 
