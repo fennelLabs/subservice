@@ -4,7 +4,7 @@ import Node from "../lib/node";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
 async function connect() {
-  const wsProvider = new WsProvider("wss://34.23.178.177:443");
+  const wsProvider = new WsProvider("wss://protocol-alpha.fennellabs.com:443");
   const api = await ApiPromise.create({ provider: wsProvider });
   console.log(api.genesisHash.toHex());
   return api;
@@ -12,24 +12,6 @@ async function connect() {
 
 async function healthcheck(req: Request, res: Response, next: NextFunction) {
     return res.status(200);
-}
-
-async function testRPC(req: Request, res: Response, next: NextFunction) {
-  const response = await fetch("http://34.23.178.177:9944", {
-    body: JSON.stringify({
-      id: 1,
-      jsonrpc: "2.0",
-      method: "system_chain",
-      params: [],
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-  return res.status(200).json({
-    response: await response.json(),
-  });
 }
 
 async function createAccount(req: Request, res: Response, next: NextFunction) {
@@ -400,7 +382,6 @@ async function getTrustHistory(
 
 export default {
   healthcheck,
-  testRPC,
   createAccount,
   getAddress,
   getAccountBalance,

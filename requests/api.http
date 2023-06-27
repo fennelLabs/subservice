@@ -7,11 +7,6 @@ GET /health_check
 Host: {{hostname}}:{{port}}
 
 ###
-# @name Test RPC
-GET /test_rpc
-Host: {{hostname}}:{{port}}
-
-###
 # @name Create Account
 GET /create_account
 Host: {{hostname}}:{{port}}
