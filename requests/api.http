@@ -1,7 +1,10 @@
-@hostname = localhost
+@hostname = 34.148.174.235
 @port = 6060
-@node_hostname = localhost
-@node_port = 9944
+
+###
+# @name Health Check
+GET /health_check
+Host: {{hostname}}:{{port}}
 
 ###
 # @name Test RPC
