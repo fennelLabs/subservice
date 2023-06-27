@@ -37,17 +37,24 @@ async function getAccountBalance(
   res: Response,
   next: NextFunction
 ) {
-  const promise = await connect();
+  try {
+    const promise = await connect();
 
-  const keyManager = new KeyManager("Main");
-  keyManager.importAccount("Main", req.body.mnemonic);
-
-  const node = new Node(promise);
-  const response = await node.getAccountBalance(keyManager);
-
-  return res.status(200).json({
-    balance: response,
-  });
+    const keyManager = new KeyManager("Main");
+    keyManager.importAccount("Main", req.body.mnemonic);
+  
+    const node = new Node(promise);
+    const response = await node.getAccountBalance(keyManager);
+  
+    return res.status(200).json({
+      balance: response,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error,
+    });
+  }
 }
 
 async function getFeeForTransferToken(
@@ -55,6 +62,7 @@ async function getFeeForTransferToken(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -69,9 +77,16 @@ async function getFeeForTransferToken(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function transferToken(req: Request, res: Response, next: NextFunction) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -86,6 +101,12 @@ async function transferToken(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForNewSignal(
@@ -93,6 +114,7 @@ async function getFeeForNewSignal(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -106,9 +128,16 @@ async function getFeeForNewSignal(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function sendNewSignal(req: Request, res: Response, next: NextFunction) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -119,6 +148,12 @@ async function sendNewSignal(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getSignalHistory(
@@ -126,6 +161,7 @@ async function getSignalHistory(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const response = await new Node(promise).listenForSignals();
@@ -133,6 +169,12 @@ async function getSignalHistory(
   return res.status(200).json({
     response: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForIssueTrust(
@@ -140,6 +182,7 @@ async function getFeeForIssueTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -153,9 +196,16 @@ async function getFeeForIssueTrust(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function issueTrust(req: Request, res: Response, next: NextFunction) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -166,6 +216,12 @@ async function issueTrust(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForRemoveTrust(
@@ -173,6 +229,7 @@ async function getFeeForRemoveTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -186,9 +243,16 @@ async function getFeeForRemoveTrust(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function removeTrust(req: Request, res: Response, next: NextFunction) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -199,6 +263,12 @@ async function removeTrust(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForRequestTrust(
@@ -206,6 +276,7 @@ async function getFeeForRequestTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
 
@@ -219,9 +290,16 @@ async function getFeeForRequestTrust(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function requestTrust(req: Request, res: Response, next: NextFunction) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -233,6 +311,12 @@ async function requestTrust(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForCancelTrustRequest(
@@ -240,6 +324,7 @@ async function getFeeForCancelTrustRequest(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -254,6 +339,12 @@ async function getFeeForCancelTrustRequest(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function cancelTrustRequest(
@@ -261,6 +352,7 @@ async function cancelTrustRequest(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -272,6 +364,12 @@ async function cancelTrustRequest(
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForRevokeTrust(
@@ -279,6 +377,7 @@ async function getFeeForRevokeTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -293,9 +392,16 @@ async function getFeeForRevokeTrust(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function revokeTrust(req: Request, res: Response, next: NextFunction) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -307,6 +413,12 @@ async function revokeTrust(req: Request, res: Response, next: NextFunction) {
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getFeeForRemoveRevokedTrust(
@@ -314,6 +426,7 @@ async function getFeeForRemoveRevokedTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -328,6 +441,12 @@ async function getFeeForRemoveRevokedTrust(
   return res.status(200).json({
     fee: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function removeRevokedTrust(
@@ -335,6 +454,7 @@ async function removeRevokedTrust(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const keyManager = new KeyManager("Main");
@@ -346,6 +466,12 @@ async function removeRevokedTrust(
   return res.status(200).json({
     hash: hash,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function checkTrustExists(
@@ -353,6 +479,7 @@ async function checkTrustExists(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const node = new Node(promise);
@@ -362,6 +489,12 @@ async function checkTrustExists(
   return res.status(200).json({
     response: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 async function getTrustHistory(
@@ -369,6 +502,7 @@ async function getTrustHistory(
   res: Response,
   next: NextFunction
 ) {
+  try {
   const promise = await connect();
 
   const node = new Node(promise);
@@ -378,6 +512,12 @@ async function getTrustHistory(
   return res.status(200).json({
     response: response,
   });
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    error: error,
+  });
+}
 }
 
 export default {
