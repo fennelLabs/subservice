@@ -1,5 +1,4 @@
-#@hostname = 34.148.174.235
-@hostname = localhost
+@hostname = 34.148.174.235
 @port = 6060
 
 ###
