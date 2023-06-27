@@ -11,7 +11,7 @@ async function connect() {
 }
 
 async function healthcheck(req: Request, res: Response, next: NextFunction) {
-    return res.status(200);
+    return res.status(200).sendStatus(200);
 }
 
 async function createAccount(req: Request, res: Response, next: NextFunction) {

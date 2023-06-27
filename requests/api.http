@@ -1,9 +1,10 @@
-@hostname = 34.148.174.235
+#@hostname = 34.148.174.235
+@hostname = localhost
 @port = 6060
 
 ###
 # @name Health Check
-GET /health_check
+GET /healthcheck
 Host: {{hostname}}:{{port}}
 
 ###
