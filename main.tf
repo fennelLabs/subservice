@@ -25,7 +25,7 @@ resource "google_compute_instance" "fennel-subservice" {
   allow_stopping_for_update = true 
 
   can_ip_forward = true
-  tags = ["private-server"]
+  tags = ["public-server"]
   
   boot_disk {
     initialize_params {
@@ -35,7 +35,7 @@ resource "google_compute_instance" "fennel-subservice" {
 
   network_interface {
     network    = "whiteflag-sandbox-vpc"
-    subnetwork = "private-subnet"
+    subnetwork = "public-subnet"
     access_config {
       nat_ip = google_compute_address.fennel-subservice-ip.address
     }
