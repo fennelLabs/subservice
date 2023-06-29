@@ -1,5 +1,5 @@
-@hostname = 34.148.174.235
-@port = 6060
+@hostname = subservice.fennellabs.com
+@port = 443
 
 ###
 # @name Health Check
