@@ -1,11 +1,9 @@
 FROM node:18
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install -g pm2
-RUN npm install
-RUN npm ci --omit=dev
 COPY . .
+RUN npm install -g pm2
+RUN npm ci
 RUN npm run build
 
 EXPOSE 6060
