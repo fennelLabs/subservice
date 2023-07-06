@@ -11,4 +11,4 @@ sudo certbot --nginx --non-interactive --agree-tos --email info@fennellabs.com -
 sudo systemctl restart nginx
 gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-east1-docker.pkg.dev
 docker run -dt -e NODE_ENV=production -p 6060:6060 --name subservice us-east1-docker.pkg.dev/whiteflag-0/fennel-docker-registry/subservice:latest
-docker exec subservice npm run start
+docker exec subservice pm2-runtime /app/build/src/server.js

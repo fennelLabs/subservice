@@ -211,7 +211,7 @@ class Node {
         {
           args: [address, address2],
         },
-        value
+        value,
       ]) => {
         result.push({
           address: address,

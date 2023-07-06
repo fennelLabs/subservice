@@ -68,7 +68,7 @@ class KeyManager {
    * @private
    */
   loadAccount(name, mnemonic) {
-    console.log(`Loading account ${name} with ${mnemonic}`)
+    console.log(`Loading account ${name} with ${mnemonic}`);
     this._pair.next(
       this._keyring.addFromUri(mnemonic, { name: name }, "sr25519")
     );

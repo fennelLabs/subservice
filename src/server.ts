@@ -2,11 +2,11 @@ import http from "http";
 import express, { Express } from "express";
 import morgan from "morgan";
 import transaction_routes from "./routes/transaction";
-import {config as configDotenv} from "dotenv";
-import {resolve} from 'path';
+import { config as configDotenv } from "dotenv";
+import { resolve } from "path";
 import bodyParser from "body-parser";
 
-configDotenv({path: resolve(__dirname, "../.env")});
+configDotenv({ path: resolve(__dirname, "../.env") });
 
 const router: Express = express();
 
