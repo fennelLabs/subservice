@@ -12,6 +12,16 @@ GET /create_account
 Host: {{hostname}}:{{port}}
 
 ###
+# @name Download Account as JSON
+POST /download_account_as_json
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "mnemonic": "captain calm afraid vehicle fetch stage custom federal assist arrange pumpkin cheese grocery square discover firm kind endorse door tonight name lonely alter wrestle"
+}
+
+###
 # @name Get Address
 POST /get_address
 Host: {{hostname}}:{{port}}

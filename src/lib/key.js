@@ -64,6 +64,10 @@ class KeyManager {
     return blake2AsHex(data);
   }
 
+  getAccountAsJson() {
+    return JSON.stringify(this._pair.value.toJson(this._pair.value.address));
+  }
+
   /**
    * @private
    */

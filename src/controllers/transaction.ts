@@ -22,6 +22,20 @@ async function createAccount(req: Request, res: Response, next: NextFunction) {
   });
 }
 
+async function downloadAccountAsJson(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.mnemonic);
+  const response = keyManager.getAccountAsJson();
+
+  return res.status(200).json({
+    json: response,
+  });
+}
+
 async function getAddress(req: Request, res: Response, next: NextFunction) {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
@@ -526,6 +540,7 @@ async function getTrustHistory(
 export default {
   healthcheck,
   createAccount,
+  downloadAccountAsJson,
   getAddress,
   getAccountBalance,
   getFeeForTransferToken,
