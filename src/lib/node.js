@@ -20,6 +20,7 @@ class Node {
     const { data: balance } = await api.query.system.account(
       keyManager.address()
     );
+    this.disconnect();
     // Very large balances upset the toNumber() call
     return `${balance.free}`;
   }
@@ -31,6 +32,7 @@ class Node {
     const info = await api.tx.balances
       .transfer(to, amount)
       .paymentInfo(keyManager.address(), keyManager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -39,6 +41,7 @@ class Node {
     const txHash = await api.tx.balances
       .transfer(address, parseInt(amount))
       .signAndSend(keymanager.signer());
+    this.disconnect();
     return txHash.toHex();
   }
 
@@ -49,6 +52,7 @@ class Node {
     const info = await api.tx.signal
       .sendSignal(content)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -58,6 +62,7 @@ class Node {
       const txHash = await api.tx.signal
         .sendSignal(content)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "sendNewSignal() failed.";
@@ -71,6 +76,7 @@ class Node {
     const info = await api.tx.trust
       .issueTrust(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -80,6 +86,7 @@ class Node {
       const txHash = await api.tx.trust
         .issueTrust(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "issueTrust() failed.";
@@ -93,6 +100,7 @@ class Node {
     const info = await api.tx.trust
       .removeTrust(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -102,6 +110,7 @@ class Node {
       const txHash = await api.tx.trust
         .removeTrust(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "removeTrust() failed.";
@@ -115,6 +124,7 @@ class Node {
     const info = await api.tx.trust
       .requestTrust(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -124,6 +134,7 @@ class Node {
       const txHash = await api.tx.trust
         .requestTrust(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "requestTrust() failed.";
@@ -137,6 +148,7 @@ class Node {
     const info = await api.tx.trust
       .cancelTrustRequest(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -146,6 +158,7 @@ class Node {
       const txHash = await api.tx.trust
         .cancelTrustRequest(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "cancelTrustRequest() failed.";
@@ -159,6 +172,7 @@ class Node {
     const info = await api.tx.trust
       .revokeTrust(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -168,6 +182,7 @@ class Node {
       const txHash = await api.tx.trust
         .revokeTrust(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "revokeTrust() failed.";
@@ -181,6 +196,7 @@ class Node {
     const info = await api.tx.trust
       .removeRevokedTrust(address)
       .paymentInfo(keymanager.address(), keymanager.signer());
+    this.disconnect();
     return info.partialFee.toNumber();
   }
 
@@ -190,6 +206,7 @@ class Node {
       const txHash = await api.tx.trust
         .removeRevokedTrust(address)
         .signAndSend(keymanager.signer());
+      this.disconnect();
       return txHash.toHex();
     } catch (e) {
       throw "removeRevokedTrust() failed.";
@@ -199,6 +216,7 @@ class Node {
   async checkTrustExists(address1, address2) {
     const api = await this.api();
     const data = await api.query.trust.trustIssuance(address1, address2);
+    this.disconnect();
     return data.toNumber();
   }
 
@@ -220,6 +238,7 @@ class Node {
         });
       }
     );
+    this.disconnect();
     return result;
   }
 
@@ -264,6 +283,7 @@ class Node {
       new Set([...new_events_list].map(JSON.stringify))
     ).map(JSON.parse);
 
+    this.disconnect();
     return final_events;
   }
 
@@ -277,7 +297,7 @@ class Node {
         api.rpc.system.name(),
         api.rpc.system.version(),
       ]);
-      await this.disconnect();
+      this.disconnect();
       return data;
     } catch (error) {
       console.log(error);
@@ -288,7 +308,7 @@ class Node {
     try {
       const api = await this.api();
       let data = await Promise.all([await api.rpc.methods()]);
-      await this.disconnect();
+      this.disconnect();
       return data;
     } catch (error) {
       console.log(error);
