@@ -16,11 +16,6 @@ class KeyManager {
   _pair = new BehaviorSubject(null);
   pair$ = this._pair.asObservable();
 
-  // Added this to bridge the mismatches between the
-  // extension's signer type and the Keypair type.
-  _address = new BehaviorSubject(null);
-  address$ = this._address.asObservable();
-
   constructor(name) {
     this._name = name; // For debugging.
     this._keyring = new Keyring();
@@ -35,7 +30,11 @@ class KeyManager {
   }
 
   address() {
-    return this._address.value;
+    return this._pair.value.address;
+  }
+
+  publicKey() {
+    return u8aToHex(this._pair.value.publicKey);
   }
 
   generateAccount(name) {
@@ -72,12 +71,9 @@ class KeyManager {
    * @private
    */
   loadAccount(name, mnemonic) {
-    console.log(`Loading account ${name} with ${mnemonic}`);
     this._pair.next(
       this._keyring.addFromUri(mnemonic, { name: name }, "sr25519")
     );
-    console.log(`Address: ${this._pair.value.address}`);
-    this._address.next(this._pair.value.address);
   }
 }
 

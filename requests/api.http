@@ -32,6 +32,16 @@ Content-Type: application/json
 }
 
 ###
+# @ name Get Address from Public Key
+POST /get_address_from_public_key
+Host: {{hostname}}:{{port}}
+Content-Type: application/json
+
+{
+    "publicKey": "0xd8c6b62ae853a82fd86a897279ffbd6a64517034438ec678e5d05a548c146375"
+}
+
+###
 # @name Get Account Balance
 POST /get_account_balance
 Host: {{hostname}}:{{port}}

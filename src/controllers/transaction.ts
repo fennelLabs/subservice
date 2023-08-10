@@ -15,10 +15,12 @@ async function healthcheck(req: Request, res: Response, next: NextFunction) {
 }
 
 async function createAccount(req: Request, res: Response, next: NextFunction) {
-  const response = new KeyManager("Main").generateAccount();
+  const keyManager = new KeyManager("Main");
 
   return res.status(200).json({
-    mnemonic: response,
+    mnemonic: keyManager.generateAccount(),
+    address: keyManager.address(),
+    publicKey: keyManager.publicKey(),
   });
 }
 
@@ -36,9 +38,33 @@ async function downloadAccountAsJson(
   });
 }
 
+async function getPublicKey(req: Request, res: Response, next: NextFunction) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.mnemonic);
+  const response = keyManager.publicKey();
+
+  return res.status(200).json({
+    publicKey: response,
+  });
+}
+
 async function getAddress(req: Request, res: Response, next: NextFunction) {
   const keyManager = new KeyManager("Main");
   keyManager.importAccount("Main", req.body.mnemonic);
+  let response = keyManager.address();
+
+  return res.status(200).json({
+    address: response,
+  });
+}
+
+async function getAddressFromPublicKey(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const keyManager = new KeyManager("Main");
+  keyManager.importAccount("Main", req.body.publicKey);
   let response = keyManager.address();
 
   return res.status(200).json({
@@ -562,4 +588,6 @@ export default {
   removeRevokedTrust,
   checkTrustExists,
   getTrustHistory,
+  getPublicKey,
+  getAddressFromPublicKey,
 };

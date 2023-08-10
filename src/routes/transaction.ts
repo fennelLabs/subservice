@@ -8,6 +8,8 @@ router.post("/get_fee_for_transfer_token", controller.getFeeForTransferToken);
 router.post("/transfer_token", controller.transferToken);
 router.post("/download_account_as_json", controller.downloadAccountAsJson);
 router.post("/get_address", controller.getAddress);
+router.post("/get_address_from_public_key", controller.getAddressFromPublicKey);
+router.post("/get_public_key", controller.getPublicKey);
 router.post("/get_account_balance", controller.getAccountBalance);
 router.post("/get_fee_for_new_signal", controller.getFeeForNewSignal);
 router.post("/send_new_signal", controller.sendNewSignal);
