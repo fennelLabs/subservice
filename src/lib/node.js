@@ -40,7 +40,7 @@ class Node {
     const api = await this.api();
     const txHash = await api.tx.balances
       .transfer(address, parseInt(amount))
-      .signAndSend(keymanager.signer());
+      .signAndSend(keymanager.signer(), { nonce: -1 });
     this.disconnect();
     return txHash.toHex();
   }
@@ -61,7 +61,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.signal
         .sendSignal(content)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -85,7 +85,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .issueTrust(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -109,7 +109,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .removeTrust(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -133,7 +133,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .requestTrust(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -157,7 +157,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .cancelTrustRequest(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -181,7 +181,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .revokeTrust(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
@@ -205,7 +205,7 @@ class Node {
       const api = await this.api();
       const txHash = await api.tx.trust
         .removeRevokedTrust(address)
-        .signAndSend(keymanager.signer());
+        .signAndSend(keymanager.signer(), { nonce: -1 });
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
