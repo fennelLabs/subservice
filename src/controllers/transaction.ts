@@ -586,6 +586,31 @@ async function getTrustParameters(
   }
 }
 
+async function calculateTrustScore(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const parameters = req.body.parameters;
+  const variables = req.body.variables;
+
+  let score = 0;
+
+  if (parameters.length !== variables.length) {
+    return res.status(400).json({
+      error: "Parameters and variables length mismatch",
+    });
+  }
+
+  for (let i = 0; i < parameters.length; i++) {
+    score += parameters[i] * variables[i];
+  }
+
+  return res.status(200).json({
+    score: score,
+  });
+}
+
 export default {
   healthcheck,
   createAccount,
@@ -614,4 +639,5 @@ export default {
   getPublicKey,
   getAddressFromPublicKey,
   getTrustParameters,
+  calculateTrustScore,
 };
