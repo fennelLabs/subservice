@@ -563,6 +563,29 @@ async function getTrustHistory(
   }
 }
 
+async function getTrustParameters(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const promise = await connect();
+
+    const node = new Node(promise);
+
+    const response = await node.getTrustParameters();
+
+    return res.status(200).json({
+      response: response,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error,
+    });
+  }
+}
+
 export default {
   healthcheck,
   createAccount,
@@ -590,4 +613,5 @@ export default {
   getTrustHistory,
   getPublicKey,
   getAddressFromPublicKey,
+  getTrustParameters,
 };

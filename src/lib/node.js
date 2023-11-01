@@ -45,6 +45,28 @@ class Node {
     return txHash.toHex();
   }
 
+  async getTrustParameters() {
+    const api = await this.api();
+    let trustParameterList = await api.query.trust.trustParameterList.entries();
+    let result = [];
+    trustParameterList.forEach(
+      ([
+        {
+          args: [address, id],
+        },
+        value,
+      ]) => {
+        result.push({
+          address: address,
+          parameter_id: id,
+          value: value.toNumber(),
+        });
+      }
+    );
+    this.disconnect();
+    return result;
+  }
+
   async getFeeForSendNewSignal(keymanager, content) {
     if (!keymanager.signer()) return;
 

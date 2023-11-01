@@ -29,5 +29,6 @@ router.post("/get_fee_for_revoke_trust", controller.getFeeForRevokeTrust);
 router.post("/revoke_trust", controller.revokeTrust);
 router.get("/check_trust_exists", controller.checkTrustExists);
 router.get("/get_trust_history", controller.getTrustHistory);
+router.get("/get_trust_parameters", controller.getTrustParameters);
 
 export = router;
