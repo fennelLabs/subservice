@@ -586,7 +586,7 @@ async function getTrustParameters(
   }
 }
 
-async function calculateTrustScore(
+async function calculateScoreForParameters(
   req: Request,
   res: Response,
   next: NextFunction
@@ -639,5 +639,5 @@ export default {
   getPublicKey,
   getAddressFromPublicKey,
   getTrustParameters,
-  calculateTrustScore,
+  calculateScoreForParameters,
 };
