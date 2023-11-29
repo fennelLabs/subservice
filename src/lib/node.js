@@ -264,6 +264,28 @@ class Node {
     return result;
   }
 
+  async getRatingHistory() {
+    const api = await this.api();
+    let ratingHistory = await api.query.signal.ratingSignalList.entries();
+    let result = [];
+    ratingHistory.forEach(
+      ([
+        {
+          args: [address, address2],
+        },
+        value,
+      ]) => {
+        result.push({
+          address: address,
+          address2: address2,
+          value: value.toNumber(),
+        });
+      }
+    );
+    this.disconnect();
+    return result;
+  }
+
   async listenForSignals() {
     var events_list = [];
 

@@ -514,6 +514,28 @@ async function removeRevokedTrust(
   }
 }
 
+async function getRatingHistory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const promise = await connect();
+
+    const node = new Node(promise);
+
+    const response = await node.getRatingHistory();
+
+    return res.status(200).json({
+      response: response,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+    });
+  }
+}
+
 async function checkTrustExists(
   req: Request,
   res: Response,
