@@ -616,14 +616,32 @@ async function calculateScoreForParameters(
   const parameters = req.body.parameters;
   const variables = req.body.variables;
 
-  let score = 0;
+  if (parameters === undefined || variables === undefined) {
+    return res.status(400).json({
+      error: "Missing parameters or variables",
+    });
+  }
 
+  if (!parameters.isArray() || !variables.isArray()) {
+    return res.status(400).json({
+      error: "Both parameters must be arrays",
+    });
+  }
+
+  if (parameters.length === 0) {
+    return res.status(400).json({
+      error: "Submitted a parameter list of length 0",
+    });
+  }
+  
   if (parameters.length !== variables.length) {
     return res.status(400).json({
       error: "Parameters and variables length mismatch",
     });
   }
 
+  let score = 0;
+  
   for (let i = 0; i < parameters.length; i++) {
     score += parameters[i] * variables[i];
   }
