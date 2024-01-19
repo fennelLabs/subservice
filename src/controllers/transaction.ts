@@ -633,7 +633,7 @@ async function calculateScoreForParameters(
       error: "Submitted a parameter list of length 0",
     });
   }
-  
+
   if (parameters.length !== variables.length) {
     return res.status(400).json({
       error: "Parameters and variables length mismatch",
@@ -641,7 +641,7 @@ async function calculateScoreForParameters(
   }
 
   let score = 0;
-  
+
   for (let i = 0; i < parameters.length; i++) {
     score += parameters[i] * variables[i];
   }
