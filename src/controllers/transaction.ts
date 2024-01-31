@@ -622,7 +622,7 @@ async function calculateScoreForParameters(
     });
   }
 
-  if (!parameters.isArray() || !variables.isArray()) {
+  if (!(parameters instanceof Array) || !(variables instanceof Array)) {
     return res.status(400).json({
       error: "Both parameters must be arrays",
     });
