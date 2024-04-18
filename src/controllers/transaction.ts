@@ -4,7 +4,7 @@ import Node from "../lib/node";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
 async function connect() {
-  const wsProvider = new WsProvider("wss://protocol-alpha.fennellabs.com:443");
+  const wsProvider = new WsProvider("ws://chain:9945");
   const api = await ApiPromise.create({ provider: wsProvider });
   console.log(api.genesisHash.toHex());
   return api;

@@ -30,7 +30,7 @@ class Node {
 
     const api = await this.api();
     const info = await api.tx.balances
-      .transfer(to, amount)
+      .transferKeepAlive(to, amount)
       .paymentInfo(keyManager.address(), keyManager.signer());
     this.disconnect();
     return info.partialFee.toNumber();
@@ -39,7 +39,7 @@ class Node {
   async transferToken(keymanager, address, amount) {
     const api = await this.api();
     const txHash = await api.tx.balances
-      .transfer(address, parseInt(amount))
+      .transferKeepAlive(address, parseInt(amount))
       .signAndSend(keymanager.signer(), { nonce: -1 });
     this.disconnect();
     return txHash.toHex();
