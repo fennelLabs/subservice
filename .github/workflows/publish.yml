@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-i#
->>>>>>> 006da6e96c692ace5bb138e888745d7cde867f73
 name: Create and publish a Docker image
 
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
