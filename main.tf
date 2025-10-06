@@ -5,14 +5,13 @@
 terraform {
   required_version = ">= 1.0"
   
-  # If you have a Terraform Cloud backend configured, keep it here
-  # Otherwise, comment out or remove the cloud block
-  # cloud {
-  #   organization = "fennellabs"
-  #   workspaces {
-  #     name = "subservice"
-  #   }
-  # }
+  # Terraform Cloud backend - required for Terraform Cloud integration
+  cloud {
+    organization = "fennellabs"
+    workspaces {
+      name = "subservice"
+    }
+  }
   
   required_providers {
     null = {
