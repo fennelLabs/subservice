@@ -1,26 +1,13 @@
 # DEPRECATED: This repository no longer uses Terraform
+# Infrastructure is now managed via Kubernetes and Helm
 
 terraform {
   required_version = ">= 1.0"
-  
-  # Terraform Cloud requires cloud or remote backend
-  # Using minimal cloud configuration
-  cloud {
-    organization = "fennellabs"
-    
-    workspaces {
-      name = "subservice"
-    }
-  }
 }
 
-# Placeholder - no actual resources
-resource "null_resource" "deprecation_notice" {
-  triggers = {
-    message = "This repository no longer uses Terraform for infrastructure management"
-  }
-}
+# Empty configuration - no resources to manage
+# This file exists only to prevent Terraform Cloud integration errors
 
-output "deprecation_notice" {
-  value = "This repository no longer uses Terraform. Infrastructure is managed via Kubernetes and Helm."
+output "notice" {
+  value = "DEPRECATED: This repository no longer uses Terraform. Infrastructure managed via Kubernetes/Helm."
 }
