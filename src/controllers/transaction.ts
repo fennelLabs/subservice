@@ -4,9 +4,18 @@ import Node from "../lib/node";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
 async function connect() {
-  const wsProvider = new WsProvider("ws://host.docker.internal:9944");
+  // Use environment variable for WebSocket URL, fallback to localhost for development
+  const wsUrl =
+    process.env.PROTOCOL_HOST_WS ||
+    process.env.RPC_HOST ||
+    "ws://localhost:9944";
+  console.log(`Connecting to blockchain at: ${wsUrl}`);
+
+  const wsProvider = new WsProvider(wsUrl);
   const api = await ApiPromise.create({ provider: wsProvider });
-  console.log(api.genesisHash.toHex());
+  console.log(
+    `Connected to blockchain. Genesis hash: ${api.genesisHash.toHex()}`
+  );
   return api;
 }
 
@@ -188,6 +197,31 @@ async function sendNewSignal(req: Request, res: Response, next: NextFunction) {
     return res.status(200).json({
       hash: hash,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error,
+    });
+  }
+}
+
+async function sendNewSignalWithBlockchainData(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const keyManager = new KeyManager("Main");
+    keyManager.importAccount("Main", req.body.mnemonic);
+
+    const promise = await connect();
+    const node = new Node(promise);
+    const result = await node.sendNewSignalWithBlockchainData(
+      keyManager,
+      req.body.content
+    );
+
+    return res.status(200).json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -661,6 +695,7 @@ export default {
   transferToken,
   getFeeForNewSignal,
   sendNewSignal,
+  sendNewSignalWithBlockchainData,
   getSignalHistory,
   getFeeForIssueTrust,
   issueTrust,
