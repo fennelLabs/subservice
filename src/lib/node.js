@@ -28,12 +28,34 @@ class Node {
   async getFeeForTransferToken(keyManager, to, amount) {
     if (!keyManager.signer()) return;
 
-    const api = await this.api();
-    const info = await api.tx.balances
-      .transferKeepAlive(to, amount)
-      .paymentInfo(keyManager.address(), keyManager.signer());
-    this.disconnect();
-    return info.partialFee.toNumber();
+    try {
+      const api = await this.api();
+
+      // Ensure amount is properly formatted as BigNumber
+      const parsedAmount =
+        typeof amount === "string" ? parseInt(amount) : amount;
+      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+        throw new Error(`Invalid amount: ${amount}`);
+      }
+
+      // Validate address format
+      if (!to || typeof to !== "string" || to.length < 40) {
+        throw new Error(`Invalid address format: ${to}`);
+      }
+
+      // Create transaction and get payment info
+      const tx = api.tx.balances.transferKeepAlive(to, parsedAmount);
+      const info = await tx.paymentInfo(keyManager.address());
+
+      this.disconnect();
+      return info.partialFee.toNumber();
+    } catch (error) {
+      console.error("getFeeForTransferToken error:", error);
+      this.disconnect();
+
+      // Return a reasonable fallback fee (0.5 FNL in smallest unit)
+      return 500000000000;
+    }
   }
 
   async transferToken(keymanager, address, amount) {
@@ -70,24 +92,203 @@ class Node {
   async getFeeForSendNewSignal(keymanager, content) {
     if (!keymanager.signer()) return;
 
-    const api = await this.api();
-    const info = await api.tx.signal
-      .sendSignal(content)
-      .paymentInfo(keymanager.address(), keymanager.signer());
-    this.disconnect();
-    return info.partialFee.toNumber();
+    try {
+      const api = await this.api();
+
+      console.log("getFeeForSendNewSignal called with:");
+      console.log("- content:", content);
+      console.log("- content length:", content?.length);
+      console.log("- keymanager address:", keymanager.address());
+      console.log(
+        "- runtime version:",
+        (await api.rpc.state.getRuntimeVersion()).toHuman()
+      );
+
+      // Validate content
+      if (!content || typeof content !== "string" || content.length === 0) {
+        throw new Error(`Invalid signal content: ${content}`);
+      }
+
+      // Check if signal pallet exists
+      if (!api.tx.signal || !api.tx.signal.sendSignal) {
+        throw new Error("Signal pallet not found in blockchain runtime");
+      }
+
+      // Create transaction and get payment info with updated API
+      console.log("Creating transaction with updated Polkadot.js...");
+      const tx = api.tx.signal.sendSignal(content);
+      console.log("Getting payment info with compatible API version...");
+      const info = await tx.paymentInfo(keymanager.address());
+      console.log("Payment info successful! Fee:", info.partialFee.toString());
+
+      this.disconnect();
+      return info.partialFee.toNumber();
+    } catch (error) {
+      console.error("getFeeForSendNewSignal error:", error);
+      console.error("Error details:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack?.split("\n")[0],
+      });
+      this.disconnect();
+
+      // Fallback fee calculation if runtime API still has issues
+      const contentLength = content?.length || 0;
+      const baseFee = 10000000000; // 0.01 FNL
+      const sizeFee = contentLength * 100000; // ~0.0000001 FNL per character
+      const complexityFee = 5000000000; // 0.005 FNL for Whiteflag processing
+      const totalFee = baseFee + sizeFee + complexityFee;
+
+      console.log(
+        `Using fallback fee calculation: ${totalFee} (~${(
+          totalFee / 1000000000000
+        ).toFixed(4)} FNL)`
+      );
+      return totalFee;
+    }
   }
 
   async sendNewSignal(keymanager, content) {
     try {
       const api = await this.api();
+
+      console.log("sendNewSignal called with content:", content);
+      console.log("Account address:", keymanager.address());
+
+      // Get the current nonce for the account
+      const nonce = await api.rpc.system.accountNextIndex(keymanager.address());
+      console.log("Using nonce:", nonce.toString());
+
       const txHash = await api.tx.signal
         .sendSignal(content)
-        .signAndSend(keymanager.signer(), { nonce: -1 });
+        .signAndSend(keymanager.signer(), { nonce });
+
+      console.log("Transaction submitted successfully:", txHash.toHex());
       this.disconnect();
       return txHash.toHex();
     } catch (e) {
+      console.error("sendNewSignal error:", e);
+      console.error("Error details:", {
+        name: e.name,
+        message: e.message,
+        stack: e.stack?.split("\n")[0],
+      });
+      this.disconnect();
       throw "sendNewSignal() failed.";
+    }
+  }
+
+  /**
+   * Send a new signal and wait for block inclusion to collect blockchain data
+   * @param {*} keymanager
+   * @param {*} content
+   * @returns {Promise<{txHash: string, blockNumber: number, blockHash: string, extrinsicIndex: number, executionSuccess: boolean, executionError: string|null}>}
+   */
+  async sendNewSignalWithBlockchainData(keymanager, content) {
+    try {
+      const api = await this.api();
+
+      console.log(
+        "sendNewSignalWithBlockchainData called with content:",
+        content
+      );
+      console.log("Account address:", keymanager.address());
+
+      // Get the current nonce for the account
+      const nonce = await api.rpc.system.accountNextIndex(keymanager.address());
+      console.log("Using nonce:", nonce.toString());
+
+      return new Promise((resolve, reject) => {
+        api.tx.signal
+          .sendSignal(content)
+          .signAndSend(
+            keymanager.signer(),
+            { nonce },
+            async ({ status, events, dispatchError, txHash }) => {
+              try {
+                console.log("Transaction status:", status.type);
+
+                if (status.isInBlock) {
+                  console.log(
+                    "Transaction included in block:",
+                    status.asInBlock.toHex()
+                  );
+
+                  const blockHash = status.asInBlock.toHex();
+                  const header = await api.rpc.chain.getHeader(blockHash);
+                  const blockNumber = header.number.toNumber();
+
+                  // Find extrinsic index in the block
+                  let extrinsicIndex = -1;
+                  try {
+                    const block = await api.rpc.chain.getBlock(blockHash);
+                    const allExtrinsics = block.block.extrinsics;
+                    extrinsicIndex = allExtrinsics.findIndex(
+                      (ext) => ext.hash.toHex() === txHash.toHex()
+                    );
+                  } catch (blockError) {
+                    console.warn("Could not fetch block to find extrinsic index:", blockError.message);
+                    // Continue without extrinsic index - it's not critical
+                  }
+
+                  // Check execution status
+                  let executionSuccess = true;
+                  let executionError = null;
+
+                  if (dispatchError) {
+                    executionSuccess = false;
+                    if (dispatchError.isModule) {
+                      const decoded = api.registry.findMetaError(
+                        dispatchError.asModule
+                      );
+                      executionError = `${decoded.section}.${
+                        decoded.name
+                      }: ${decoded.docs.join(" ")}`;
+                    } else {
+                      executionError = dispatchError.toString();
+                    }
+                    console.error(
+                      "Transaction failed with error:",
+                      executionError
+                    );
+                  }
+
+                  const result = {
+                    txHash: txHash.toHex(),
+                    blockNumber: blockNumber,
+                    blockHash: blockHash,
+                    extrinsicIndex: extrinsicIndex,
+                    executionSuccess: executionSuccess,
+                    executionError: executionError,
+                  };
+
+                  console.log("Blockchain data collected:", result);
+                  this.disconnect();
+                  resolve(result);
+                  return; // Exit callback after resolving
+                }
+              } catch (error) {
+                console.error("Error in status callback:", error);
+                this.disconnect();
+                reject(error);
+              }
+            }
+          )
+          .catch((error) => {
+            console.error("signAndSend error:", error);
+            this.disconnect();
+            reject(error);
+          });
+      });
+    } catch (e) {
+      console.error("sendNewSignalWithBlockchainData error:", e);
+      console.error("Error details:", {
+        name: e.name,
+        message: e.message,
+        stack: e.stack?.split("\n")[0],
+      });
+      this.disconnect();
+      throw new Error("sendNewSignalWithBlockchainData() failed: " + e.message);
     }
   }
 

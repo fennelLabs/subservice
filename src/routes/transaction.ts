@@ -13,8 +13,12 @@ router.post("/get_public_key", controller.getPublicKey);
 router.post("/get_account_balance", controller.getAccountBalance);
 router.post("/get_fee_for_new_signal", controller.getFeeForNewSignal);
 router.post("/send_new_signal", controller.sendNewSignal);
+router.post(
+  "/send_new_signal_with_blockchain_data",
+  controller.sendNewSignalWithBlockchainData
+);
 router.get("/get_signal_history", controller.getSignalHistory);
-router.get("/get_fee_for_issue_trust", controller.getFeeForIssueTrust);
+router.post("/get_fee_for_issue_trust", controller.getFeeForIssueTrust);
 router.post("/issue_trust", controller.issueTrust);
 router.post("/get_fee_for_remove_trust", controller.getFeeForRemoveTrust);
 router.post("/remove_trust", controller.removeTrust);

@@ -1,3 +1,76 @@
 node_modules
 build/
 **/.DS_Store
+
+# ===================================
+# Kubernetes Infrastructure
+# ===================================
+k8s-*.yaml
+k8s-*.yml
+k8s/
+kubernetes/
+*.k8s.yaml
+*.k8s.yml
+
+# Helm Charts 
+helm/
+Chart.yaml
+values*.yaml
+templates/
+
+# Deployment Scripts
+deploy.sh
+*-deploy.sh
+*.deploy.sh
+
+# GitHub Actions Deployment Workflows
+.github/workflows/*deploy*.yml
+.github/workflows/*deploy*.yaml
+
+# ===================================
+#  Terraform Infrastructure
+# ===================================
+*.tf
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+backend.tf
+providers.tf
+variables.tf
+
+# ===================================
+# Credentials
+# ===================================
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+*.secret
+credentials.json
+*-credentials.json
+
+# ===================================
+# Cloud Provider Configs
+# ===================================
+.azure/
+.gcloud/
+.aws/
+kubeconfig*
+*.kubeconfig
+
+# ===================================
+# Infrastructure Scripts
+# ===================================
+*-terraform-*.sh
+*-nginx-conf-*.sh
+
+# Security documentation
+SECURITY_*.md
